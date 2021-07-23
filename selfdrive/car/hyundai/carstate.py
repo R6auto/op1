@@ -37,14 +37,14 @@ class CarState(CarStateBase):
     ret.steerWarning = cp.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
 
     # cruise state
-    if self.CP.openpilotLongitudinalControl:
-      ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0
-      ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1
-      ret.cruiseState.standstill = cp.vl["TCS13"]["StandStill"] == 1
-    else:
-      ret.cruiseState.available = cp.vl["SCC11"]["MainMode_ACC"] == 1
-      ret.cruiseState.enabled = cp.vl["SCC12"]["ACCMode"] != 0
-      ret.cruiseState.standstill = cp.vl["SCC11"]["SCCInfoDisplay"] == 4.
+    #if self.CP.openpilotLongitudinalControl:
+    #  ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0
+    #  ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1
+    #  ret.cruiseState.standstill = cp.vl["TCS13"]["StandStill"] == 1
+    #else:
+    ret.cruiseState.available = True
+    ret.cruiseState.enabled = (cp.vl["SCC12"]['ACCMode'] != 0) or  ( cp.vl["SCC11"]['MainMode_ACC'] != 0)
+    ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
     if ret.cruiseState.enabled:
       speed_conv = CV.MPH_TO_MS if cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"] else CV.KPH_TO_MS
